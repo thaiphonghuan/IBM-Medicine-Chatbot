@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Chatbot</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        /* Left Sidebar */
+        #left-panel {
+            width: 250px; /* Chiều rộng thanh bên */
+            position: fixed; /* Định vị cố định bên trái */
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #2c3e50; /* Màu nền thanh bên */
+            color: white; /* Màu chữ */
+            padding: 20px; /* Khoảng cách bên trong */
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng cho thanh bên */
+            overflow-y: auto; /* Thanh cuộn nếu nội dung quá dài */
+            border-radius: 0px 10px 10px 0px; /* Bo góc thanh bên */
+            transition: width 0.3s ease-in-out; /* Hiệu ứng mượt khi thay đổi chiều rộng */
+        }
+
+        #left-panel:hover {
+            width: 280px; /* Tăng chiều rộng khi hover vào thanh bên */
+        }
+
+        #left-panel .logo {
+            text-align: center;
+            margin-bottom: 30px; /* Khoảng cách dưới logo */
+        }
+
+        #left-panel .logo img {
+            width: 100px; /* Chiều rộng logo */
+            height: auto; /* Đảm bảo tỉ lệ chiều cao */
+        }
+
+        #left-panel h2 {
+            font-size: 24px; /* Kích thước chữ tiêu đề */
+            margin-bottom: 30px; /* Khoảng cách dưới tiêu đề */
+            text-align: center; /* Căn giữa tiêu đề */
+            color: #ecf0f1; /* Màu chữ sáng hơn */
+        }
+
+        .drug-box {
+            background-color: #34495e; /* Màu nền của từng ô */
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px; /* Bo góc cho từng ô */
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative; /* Định vị vị trí để thêm hiệu ứng */
+        }
+
+        .drug-box:hover {
+            background-color: #1abc9c; /* Màu nền khi hover */
+            transform: translateX(10px); /* Dịch chuyển sang phải khi hover */
+        }
+
+        .drug-box:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            width: 8px;
+            height: 8px;
+            background-color: #1abc9c; /* Dấu chấm hiệu ứng */
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .drug-box:hover:before {
+            left: -20px; /* Dịch chuyển dấu chấm khi hover */
+        }
+
+
+        /* Drug Info Section */
+        #drug-info {
+            margin-left: 270px;
+            padding: 30px;
+            flex-grow: 1;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #495057;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #drug-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #drug-image img {
+            width: 40%;
+            height: auto;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #drug-description, #drug-uses, #drug-composition {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #343a40;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            #left-panel {
+                width: 200px;
+            }
+
+            #drug-info {
+                margin-left: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Sidebar -->
+    <div id="left-panel">
+        <div class="logo">
+            <img src="img/giphy.webp" alt="Logo" />
+        </div>
+        <h2>Drug Information</h2>
+        <div class="drug-box" onclick="showDrugInfo('Paracetamol')">Paracetamol</div>
+        <div class="drug-box" onclick="showDrugInfo('Panadol')">Panadol</div>
+        <div class="drug-box" onclick="showDrugInfo('Aspirin')">Aspirin</div>
+        <div class="drug-box" onclick="showDrugInfo('Ibuprofen')">Ibuprofen</div>
+        <div class="drug-box" onclick="showDrugInfo('Naproxen')">Naproxen</div>
+        <div class="drug-box" onclick="showDrugInfo('Efferalgan')">Efferalgan</div>
+        <div class="drug-box" onclick="showDrugInfo('Coldacmin')">Coldacmin</div>
+    </div>
+    
+
+    <!-- Drug Info Section -->
+    <div id="drug-info">
+        <h1>Drug Information</h1>
+        <div id="drug-image">
+            <img id="image" src="img/intro.jpg" alt="Select a drug to view details">
+        </div>
+        <p id="drug-description" style="text-align: center; margin: 0;">Select a drug to view detailed information.</p>
+        <div id="drug-uses"></div>
+        <div id="drug-composition"></div>
+    </div>
+
+    <!-- Watson Assistant Chatbot -->
+    <script>
+        window.watsonAssistantChatOptions = {
+            integrationID: "956b4870-6e9c-4a8b-8a32-4e5e079cf36d", // The ID of this integration.
+            region: "au-syd", // The region your integration is hosted in.
+            serviceInstanceID: "015d6c6c-4811-4f74-b9d4-81dc75377e2a", // The ID of your service instance.
+            onLoad: async (instance) => { await instance.render(); }
+        };
+        setTimeout(function(){
+            const t=document.createElement('script');
+            t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + 
+                  (window.watsonAssistantChatOptions.clientVersion || 'latest') + 
+                  "/WatsonAssistantChatEntry.js";
+            document.head.appendChild(t);
+        }, 0);
+    </script>
+
+    <!-- JavaScript -->
+    <script>
+        function showDrugInfo(drugName) {
+            const drugInfo = {
+                "Paracetamol": {
+                    description: `Paracetamol, also known as acetaminophen, is an over-the-counter pain reliever. It is commonly used to reduce mild to moderate pain or fever and is also used to treat cold and flu symptoms.`,
+                    uses: `Used to reduce mild to moderate pain or fever and is also used to treat cold and flu symptoms.`,
+                    composition: `Composition: \n- Tablet: Often available in doses of 325mg and 500mg. \n- Suppository: Available in doses of 80mg, 150mg, and 300mg, commonly used for children. \n- Liquid solution: Doses like 160mg/5ml, 500mg/5ml, etc. \n- Effervescent tablet: Usually available in 500mg. \n- Intravenous injection: Used when prescribed by a doctor.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/Para.jpg"  // Path to Paracetamol image
+                },
+                "Panadol": {
+                    description: `Panadol is a widely used over-the-counter medication that contains paracetamol (acetaminophen) as its active ingredient. It is primarily used for pain relief and fever reduction, offering a safe and effective option for treating mild to moderate symptoms when used as directed.`,
+                    uses: `Panadol is commonly used for:\n
+                        - Pain Relief: Treating mild to moderate pain such as headaches, toothaches, menstrual pain, back pain, and muscle aches.\n
+                        - Fever Reduction: Lowering fever caused by infections, colds, or the flu.\n
+                        - Symptomatic Relief: Alleviating symptoms of conditions like colds, flu, and sore throat.\n
+                        - Post-Vaccination Fever: Managing fever and mild discomfort after vaccinations.`,
+                    composition: `Composition of Panadol:\n
+                        Active Ingredient:\n
+                        - Paracetamol: The primary active ingredient, usually in dosages of 500mg per tablet or capsule.\n
+                        Excipients (Inactive Ingredients):\n
+                        - Starch: Used as a filler and binder.\n
+                        - Povidone: A stabilizer.\n
+                        - Stearic Acid or Magnesium Stearate: Acts as a lubricant during manufacturing.\n
+                        - Sodium Bicarbonate or Citric Acid (in effervescent tablets): To facilitate dissolution in water.\n
+                        - Flavoring Agents (in syrups or liquid forms): For palatability.\n
+                        Specific Panadol variants, such as Panadol Extra or Panadol Cold & Flu, may include additional active ingredients like caffeine or decongestants to target specific symptoms. Always refer to the packaging for detailed information on composition.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/panadol.jpg"  // Path to Panadol image
+                },
+                "Aspirin": {
+                    description: `Aspirin, also known as acetylsalicylic acid, is a widely used over-the-counter medication belonging to the nonsteroidal anti-inflammatory drug (NSAID) class. It is known for its analgesic (pain-relieving), antipyretic (fever-reducing), and anti-inflammatory properties. Aspirin is also used for its antiplatelet effects, making it effective in preventing blood clots.`,
+                    uses: `Aspirin is commonly used for:\n
+                        - Pain and Fever Relief: Treating mild to moderate pain, such as headaches, toothaches, and muscle aches, and reducing fever caused by infections or other illnesses.\n
+                        - Anti-Inflammatory: Managing inflammatory conditions like rheumatoid arthritis, osteoarthritis, and other joint-related disorders.\n
+                        - Cardiovascular Health: Preventing blood clots in individuals at risk of heart attacks or strokes by inhibiting platelet aggregation. Often prescribed in low doses as a "baby aspirin" for long-term use in heart disease prevention.\n
+                        - Other Uses: Relieving minor pain from conditions like menstrual cramps, migraines, and minor injuries.`,
+                    composition: `Composition of Aspirin:\n
+                        Active Ingredient:\n
+                        - Acetylsalicylic Acid: Available in varying strengths, such as 81mg (low-dose) or 325mg (regular-dose) tablets.\n
+                        Excipients (Inactive Ingredients):\n
+                        - Starch: Used as a binder and filler.\n
+                        - Cellulose: A stabilizer and disintegrant.\n
+                        - Silicon Dioxide: An anti-caking agent.\n
+                        - Stearic Acid: A lubricant to aid in tablet production.\n
+                        Some formulations, such as enteric-coated aspirin, include a special coating to reduce stomach irritation by delaying absorption until the tablet reaches the intestines. Others, like effervescent aspirin, contain additional ingredients like sodium bicarbonate to dissolve quickly in water.\n
+                        Important Note:\n
+                        - Aspirin should not be used in children under 12 years old or teenagers recovering from viral infections, as it can cause Reye's syndrome, a rare but serious condition.\n
+                        - It is also contraindicated for people with certain conditions, such as peptic ulcers, bleeding disorders, or aspirin allergies, unless advised by a doctor.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/aspirin.jpg"  // Path to Aspirin image
+                },
+                "Ibuprofen": {
+                    description: `Ibuprofen is a widely used nonsteroidal anti-inflammatory drug (NSAID) that helps reduce pain, inflammation, and fever. It is commonly available over the counter in various forms, such as tablets, capsules, liquid suspensions, and topical gels. Ibuprofen is known for its effectiveness in treating a wide range of mild to moderate symptoms.`,
+                    uses: `Ibuprofen is commonly used for:\n
+                        - Pain Relief: Treating headaches (including migraines and tension headaches), toothaches, menstrual cramps (dysmenorrhea), muscle aches, sprains, strains, and post-operative or injury-related pain.\n
+                        - Fever Reduction: Lowering fever caused by colds, flu, or infections.\n
+                        - Anti-Inflammatory: Managing inflammation in conditions like arthritis (osteoarthritis, rheumatoid arthritis), tendinitis, and bursitis.\n
+                        - Other Uses: Reducing pain and swelling from conditions like gout or sports injuries.`,
+                    composition: `Composition of Ibuprofen:\n
+                        Active Ingredient:\n
+                        - Ibuprofen: Available in dosages ranging from 200mg (over-the-counter) to higher doses like 400mg, 600mg, or 800mg (prescription strength).\n
+                        Excipients (Inactive Ingredients):\n
+                        - Lactose Monohydrate: Used as a filler in tablets.\n
+                        - Croscarmellose Sodium: A disintegrant to aid tablet dissolution.\n
+                        - Microcrystalline Cellulose: A binder to maintain tablet integrity.\n
+                        - Magnesium Stearate: A lubricant used during manufacturing.\n
+                        - Flavoring and Sweeteners (in liquid or chewable forms): To improve taste, especially for children’s formulations.\n
+                        Some ibuprofen formulations, like soft gels, include additional components like gelatin and polyethylene glycol for faster absorption. Topical ibuprofen gels may contain alcohol and gelling agents to enhance application and absorption through the skin.\n
+                        Important Note:\n
+                        - Precautions: Long-term or high-dose use of ibuprofen may increase the risk of stomach ulcers, gastrointestinal bleeding, or cardiovascular events like heart attacks and strokes.\n
+                        - Contraindications: Not recommended for individuals with NSAID allergies, peptic ulcers, kidney disease, or severe heart conditions unless directed by a doctor.\n
+                        Always follow dosing instructions, and avoid exceeding the recommended daily limit to prevent adverse effects.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/ibuprofen.jpg"  // Path to Ibuprofen image
+                },
+                "Naproxen": {
+                    description: `Naproxen is a nonsteroidal anti-inflammatory drug (NSAID) used to reduce inflammation, pain, and fever. It is available both over the counter and by prescription in various forms, such as tablets, capsules, and liquid suspensions. Naproxen is effective for managing chronic inflammatory conditions and acute pain.`,
+                    uses: `Naproxen is commonly used for:\n
+                        - Pain Relief: Treating headaches (including tension headaches and migraines), toothaches, menstrual cramps (dysmenorrhea), musculoskeletal pain (back pain, muscle aches, joint pain), and postoperative or minor injury-related pain.\n
+                        - Anti-Inflammatory: Treating conditions like osteoarthritis, rheumatoid arthritis, ankylosing spondylitis, and gout; managing inflammation from tendonitis, bursitis, and other soft tissue injuries.\n
+                        - Fever Reduction: Reducing fever caused by infections, colds, or other illnesses.`,
+                    composition: `Composition of Naproxen:\n
+                        Active Ingredient:\n
+                        - Naproxen: Common dosages are 250mg, 500mg, or 550mg tablets or capsules for over-the-counter formulations. Prescription formulations may contain higher doses or extended-release versions.\n
+                        Excipients (Inactive Ingredients):\n
+                        - Corn Starch: A filler and binder for tablets.\n
+                        - Cellulose: A stabilizing agent and binder.\n
+                        - Magnesium Stearate: A lubricant to ease tablet production.\n
+                        - Sodium: In some formulations to improve solubility.\n
+                        - Coating Materials: Used in certain formulations (e.g., enteric-coated tablets) to protect the stomach lining or aid in drug release.\n
+                        Important Note:\n
+                        - Precautions: Naproxen, like other NSAIDs, may cause gastrointestinal issues such as ulcers, bleeding, or irritation, especially with long-term use.\n
+                        - Contraindications: Not recommended for individuals with active ulcers, gastrointestinal bleeding, or certain heart conditions unless prescribed by a doctor.\n
+                        - Kidney and Cardiovascular Risks: Naproxen can affect kidney function and increase the risk of heart attack or stroke, particularly with prolonged use or in those with pre-existing health conditions.\n
+                        Always follow the recommended dosage to minimize risks, especially for long-term use.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/naproxen.jpg"  // Path to Naproxen image
+                },
+                "Efferalgan": {
+                    description: `Efferalgan is an over-the-counter medication that contains paracetamol (acetaminophen) as its active ingredient. It is primarily used for the relief of mild to moderate pain and for reducing fever. Efferalgan is known for its effervescent formulation, meaning it dissolves in water to create a solution, which is often easier to take, especially for those who have difficulty swallowing pills.`,
+                    uses: `Efferalgan is commonly used for:
+                        - Pain Relief: Treating mild to moderate pain such as headaches, toothaches, menstrual cramps, muscle aches, joint pain, back pain, post-surgical pain, and pain from injuries.
+                        - Fever Reduction: Reducing fever caused by infections like the flu, colds, or other illnesses.
+                        - Symptomatic Relief: Often used as part of cold and flu treatment regimens to alleviate discomfort and lower body temperature.`,
+                    composition: `Composition of Efferalgan:
+                        Active Ingredient:
+                        - Paracetamol (Acetaminophen): Efferalgan contains paracetamol in dosages like 500mg or 1000mg per tablet, depending on the specific product.
+                        Excipients (Inactive Ingredients):
+                        - Citric Acid: Facilitates the effervescent reaction when dissolved in water.
+                        - Sodium Bicarbonate: Works with citric acid to create bubbles that help the tablet dissolve.
+                        - Sodium Carbonate: Balances the pH of the formulation.
+                        - Flavoring Agents: Added to improve taste, especially for liquid or effervescent forms.
+                        - Other Compounds: Depending on the formulation, may include preservatives or stabilizers.`,
+                    importantNote: `Important Note:
+                        - Precautions: While Efferalgan is generally safe when taken at recommended doses, exceeding the recommended dose of paracetamol can lead to liver damage.
+                        - Contraindications: Efferalgan should be avoided by individuals with severe liver impairment. Caution should be taken by people with kidney disease or those who consume alcohol regularly.
+                        - Do not combine Efferalgan with other medications containing paracetamol to avoid overdose.
+                        - Always follow dosage instructions and consult a healthcare professional if you have underlying health conditions.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/eff.jpg"  // Path to Efferalgan image
+                },
+                "Coldacmin": {
+                    description: `Coldacmin is an over-the-counter medication primarily used for relieving symptoms of the common cold, flu, and other upper respiratory tract infections. It is a combination medication that contains multiple active ingredients aimed at addressing various symptoms such as congestion, fever, body aches, and runny nose. Coldacmin is available in tablet or liquid form and is typically used for short-term relief.`,
+                    uses: `Coldacmin is used for:
+                        - Symptomatic Relief of Cold and Flu Symptoms:
+                        - Fever Reduction: Helps lower elevated body temperature caused by infections.
+                        - Pain Relief: Alleviates mild to moderate pain, such as headaches, sore throat, muscle aches, and body pain.
+                        - Nasal Congestion: Provides relief from a stuffy or blocked nose by reducing swelling in nasal passages.
+                        - Cough Relief: Some formulations of Coldacmin include ingredients that help suppress cough.
+                        - Runny Nose: Addresses excessive nasal discharge caused by a cold or allergy.`,
+                    composition: `Composition of Coldacmin:
+                        Active Ingredients:
+                        - Paracetamol (Acetaminophen): A pain reliever and fever reducer.
+                        - Chlorpheniramine Maleate: An antihistamine used to reduce symptoms like a runny nose, sneezing, and watery eyes caused by allergic reactions or cold.
+                        - Phenylephrine: A decongestant that helps relieve nasal congestion by constricting blood vessels in the nasal passages.
+                        - Caffeine: Often added in small amounts to counteract drowsiness caused by the antihistamine component.
+                        Excipients (Inactive Ingredients):
+                        - Starch: Used as a filler and binder in tablet formulations.
+                        - Lactose: A sugar used as a stabilizer and filler.
+                        - Magnesium Stearate: A lubricant to help with tablet production.
+                        - Sodium Bicarbonate: Often used to balance the pH in liquid formulations.`,
+                    importantNote: `Important Note:
+                        - Precautions: Coldacmin should not be used in people with certain conditions such as high blood pressure, glaucoma, or prostate problems due to its decongestant and antihistamine components.
+                        - Contraindications: Individuals who are allergic to any of the active ingredients or those who are taking other medications that may interact (e.g., monoamine oxidase inhibitors) should avoid using Coldacmin.
+                        - Caution in Pregnancy and Breastfeeding: Coldacmin should only be used under the supervision of a doctor during pregnancy or breastfeeding.
+                        - Dosage: It is important to follow the recommended dosage to avoid side effects, especially from paracetamol, which can cause liver damage if taken in excess. Always consult a healthcare professional if unsure about the appropriate use.`,
+                    image: "C:/Users/Admin/Documents/Medicine Bot/img/col.png"  // Path to Coldacmin image
+                }
+
+            };
+
+            const drug = drugInfo[drugName];
+            if (drug) {
+                document.getElementById("image").src = drug.image;
+                document.getElementById("image").alt = drugName;
+                document.getElementById("drug-description").innerHTML = `<span class="section-title">Description:</span> ${drug.description}`;
+                document.getElementById("drug-uses").innerHTML = `<span class="section-title">Uses:</span> ${drug.uses}`;
+                document.getElementById("drug-composition").innerHTML = `<span class="section-title">Composition:</span> ${drug.composition}`;
+            } else {
+                document.getElementById("drug-description").innerText = "Information not available.";
+                document.getElementById("drug-uses").innerText = "";
+                document.getElementById("drug-composition").innerText = "";
+            }
+        }
+    </script>
+</body>
+</html>
